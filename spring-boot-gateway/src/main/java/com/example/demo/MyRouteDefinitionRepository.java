@@ -30,7 +30,9 @@ public class MyRouteDefinitionRepository implements RouteDefinitionRepository {
 
 		routeDefinition.setPredicates(Arrays.asList(p));
 		routeDefinition.setId("这个id的目的是为了覆盖");
-		routeDefinition.setUri(URI.create("http://localhost:8080"));
+		// 1.经过测试发现。这个uri不会使用path。比如配置"http://localhost:7001/abcd" 后面的abcd没用用处
+		// 2.经过测试发现，"http://"不能少
+		routeDefinition.setUri(URI.create("http://localhost:7001"));
 
 		return routeDefinition;
 	}
