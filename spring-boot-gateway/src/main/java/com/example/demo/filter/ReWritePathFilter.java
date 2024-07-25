@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -28,6 +28,9 @@ public class ReWritePathFilter implements GlobalFilter, Ordered {
 	}
 
 	public String newPath(String path) {
+		if(!"demo".equals(path)) {
+			return path;
+		}
 		path = path.replaceFirst("/", "");
 		int index = path.indexOf("/");
 		if (index < 0) {
