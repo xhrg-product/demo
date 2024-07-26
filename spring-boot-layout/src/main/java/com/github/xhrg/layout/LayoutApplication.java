@@ -1,13 +1,13 @@
-package com.example.demo;
+package com.github.xhrg.layout;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class LayoutApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(LayoutApplication.class, args);
 	}
 
 }
