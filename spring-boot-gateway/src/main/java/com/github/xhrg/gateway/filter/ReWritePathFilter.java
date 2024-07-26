@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.github.xhrg.gateway.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

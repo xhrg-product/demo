@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.github.xhrg.gateway;
 
 import java.net.URI;
 import java.util.Arrays;

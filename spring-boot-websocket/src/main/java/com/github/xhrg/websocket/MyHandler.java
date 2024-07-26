@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.github.xhrg.websocket;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;

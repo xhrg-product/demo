@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.github.xhrg.gateway.filter;
 
 import java.net.URI;
 import java.net.URISyntaxException;
