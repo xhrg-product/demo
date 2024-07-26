@@ -13,7 +13,7 @@
 
 #### 2024.07.01.spring-boot-demo
 
-一个最简单的spring-boot项目
+一个最简单的spring-boot项目, 所有项目从这里复制开始
 
 #### 2024.07.05.spring-boot-websocket
 
@@ -22,3 +22,12 @@ websocket项目
 #### 2024.07.26.spring-boot-gateway
 
 spring cloud gateway 项目
+
+#### 2024.07.26.spring-boot-web
+
+spring-boot-web项目，包含以下内容
+
+> 可以使用postman或者apipost最新版进行相关测试
+* 简单的http接口
+* 简单的sse接口
+* 简单的websocket接口
