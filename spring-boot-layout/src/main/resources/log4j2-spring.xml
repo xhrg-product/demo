@@ -4,7 +4,7 @@
         <!--从环境变量中获取APP_ID,日志文件保存到指定位置-->
         <Property name="LOG_PATH">${sys:user.home}/logs/${spring:spring.application.name}</Property>
         <Property name="FILE_NAME">app.log</Property>
-        <Property name="FILE_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%level] [%thread] [%X{traceid}] %logger{36} %L - %msg%xEx%n</Property>
+        <Property name="FILE_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%level] [%thread] [%X{traceid}] %logger{36}:%L - %msg%xEx%n</Property>
     </Properties>
   
     <Appenders>
