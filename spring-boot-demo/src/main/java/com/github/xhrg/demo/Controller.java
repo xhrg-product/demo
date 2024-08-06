@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.github.xhrg.demo;
 
 import javax.servlet.http.HttpServletRequest;
 
