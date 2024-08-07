@@ -3,14 +3,17 @@
 eclipse请使用：http://www.flowable.org/designer/update/，eclipse如果在插件市场搜索bpmn也能搜到一个画图工具，但是没有flowable这个好用
 
 
-## 参考
+## 参考资料
 * 【重要】https://juejin.cn/post/7136065886506450975
+* https://juejin.cn/post/7156530891576049671
 * https://blog.csdn.net/inrgihc/article/details/108292825
 
 ## 项目介绍
 
 * flowable-spring-boot-starter-ui-{xxx} 这些是为了让项目启动一个web页面，一般项目发布不会有这些功能。
 * flowable-spring-boot-starter 这个依赖是springboot集成flowable，并且可以使用flowable提供的java api接口进行流程发起，申请等。
+* 数据库是自动生成的，不需要初始化脚本。
+* 默认登录是admin / test
 
 
 ## maven依赖区分
