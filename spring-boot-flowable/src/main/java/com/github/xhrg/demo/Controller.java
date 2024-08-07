@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-	@RequestMapping("/**")
+	@RequestMapping("/mydemo/**")
 	public String all(HttpServletRequest request) {
 		System.out.println(request.getRequestURL().toString());
 		return "" + request.getRequestURL().toString();
