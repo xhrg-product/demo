@@ -1,4 +1,4 @@
-package com.github.xhrg.web;
+package com.github.xhrg.web.biz;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

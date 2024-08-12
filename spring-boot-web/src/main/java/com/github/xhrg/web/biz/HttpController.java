@@ -1,4 +1,4 @@
-package com.github.xhrg.web;
+package com.github.xhrg.web.biz;
 
 import javax.servlet.http.HttpServletRequest;
 
