@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>index</title>
+</head>
+<body>home
+</body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+	//这里根据需要改为自己的域名
+    
+	//$.get("./home", function(data, status) {
+	//	console.log(data);
+	//});
+
+	$.ajax({
+		type : "GET",
+		url : "http://out.com:8080/out",
+		headers : {},
+		xhrFields : {
+			withCredentials : true
+		},
+		crossDomain : true,
+		success : function(result) {
+			console.log(result);
+		}
+	});
+</script>
+</html>
