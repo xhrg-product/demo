@@ -1,9 +1,10 @@
-package com.github.xhrg.netty.tcp;
+package com.github.xhrg.netty.tcp.server;
 
 import com.github.xhrg.netty.util.NettyUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -50,7 +51,9 @@ public class NettyTcpServer {
 				line.addLast(new NettyTcpServerHandler());
 			}
 		});
-		// bootstrap.bind(8080).sync().channel().closeFuture().sync();这句话注释掉，先不删除，待定其用法
+		// 这句话注释掉，先不删除，待定其用法
+		// bootstrap.bind(8080).sync().channel().closeFuture().addListener(ChannelFutureListener.CLOSE);
+		
 		ChannelFuture c = bootstrap.bind(port).sync();
 		String ip = c.channel().localAddress().toString();
 		System.out.println(ip);

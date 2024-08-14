@@ -1,5 +1,6 @@
-package com.github.xhrg.netty.tcp;
+package com.github.xhrg.netty.tcp.client;
 
+import com.github.xhrg.netty.tcp.server.NettyTcpServer;
 import com.github.xhrg.netty.util.NettyUtils;
 
 import io.netty.bootstrap.Bootstrap;
@@ -7,9 +8,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -25,7 +25,7 @@ public class NettyTcpClient {
 		EventLoopGroup group = isUseEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
 		bootstrap.group(group);
-		bootstrap.channel(isUseEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
+		bootstrap.channel(isUseEpoll ? EpollSocketChannel.class : NioSocketChannel.class);
 
 		bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
 			@Override
