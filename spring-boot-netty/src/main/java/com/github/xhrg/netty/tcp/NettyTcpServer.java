@@ -1,55 +1,53 @@
 package com.github.xhrg.netty.tcp;
 
+import com.github.xhrg.netty.util.NettyUtils;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ServerChannel;
-import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
+import io.netty.util.NettyRuntime;
 
 public class NettyTcpServer {
-	private static boolean isUseEpoll = useEpoll();
 
-	private static int port = 443;
+	private static boolean isUseEpoll = NettyUtils.useEpoll();
+
+	private static int cSize = NettyRuntime.availableProcessors();
+
+	public static int port = 40814;
 
 	public static void main(String[] args) throws InterruptedException {
+
+		System.out.println(NettyRuntime.availableProcessors());
+
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		EventLoopGroup boss;
-		EventLoopGroup selector;
 
-		if (isUseEpoll) {
-			boss = new EpollEventLoopGroup(1);
-		} else {
-			boss = new NioEventLoopGroup(1);
-		}
+		EventLoopGroup boss = isUseEpoll ? new EpollEventLoopGroup(1) : new NioEventLoopGroup(1);
+		EventLoopGroup selector = isUseEpoll ? new EpollEventLoopGroup(cSize) : new NioEventLoopGroup(cSize);
 
-		if (isUseEpoll) {
-			selector = new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors());
-		} else {
-			selector = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
-		}
-
-		bootstrap.group(boss, selector).channel(socketChannelClass());
-
-		// linux下的单进程多端口
-		if (isUseEpoll) {
-			bootstrap.option(EpollChannelOption.SO_REUSEPORT, true);
-			bootstrap.option(ChannelOption.SO_REUSEADDR, true);
-		}
+		bootstrap.group(boss, selector)
+				.channel(isUseEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
 
 		initOption(bootstrap);
 
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new TcpHandler());
+				ChannelPipeline line = ch.pipeline();
+				ch.pipeline().addLast(new StringDecoder(CharsetUtil.UTF_8));
+				ch.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8));
+				line.addLast(new NettyTcpServerHandler());
 			}
 		});
 		// bootstrap.bind(8080).sync().channel().closeFuture().sync();这句话注释掉，先不删除，待定其用法
@@ -59,6 +57,12 @@ public class NettyTcpServer {
 	}
 
 	public static void initOption(ServerBootstrap bootstrap) {
+
+		// linux下的单进程多端口
+		if (isUseEpoll) {
+			bootstrap.option(EpollChannelOption.SO_REUSEPORT, true);
+			bootstrap.option(ChannelOption.SO_REUSEADDR, true);
+		}
 
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, false);
@@ -71,18 +75,4 @@ public class NettyTcpServer {
 		bootstrap.childOption(ChannelOption.SO_SNDBUF, 65535);
 	}
 
-	private static Class<? extends ServerChannel> socketChannelClass() {
-		if (isUseEpoll) {
-			return EpollServerSocketChannel.class;
-		}
-		return NioServerSocketChannel.class;
-	}
-
-	private static boolean useEpoll() {
-		String osName = System.getProperty("os.name");
-		if (osName != null && osName.toLowerCase().contains("linux") && Epoll.isAvailable()) {
-			return true;
-		}
-		return false;
-	}
 }
