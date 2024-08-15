@@ -1,5 +1,7 @@
 package com.github.xhrg.netty.tcp.server;
 
+import java.util.concurrent.TimeUnit;
+
 import com.github.xhrg.netty.util.NettyUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -16,6 +18,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.NettyRuntime;
 
@@ -43,9 +46,10 @@ public class NettyTcpServer {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline line = ch.pipeline();
-				ch.pipeline().addLast(new StringDecoder(CharsetUtil.UTF_8));
-				ch.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8));
-				line.addLast(new NettyTcpServerHandler());
+				line.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
+				line.addLast(new StringDecoder(CharsetUtil.UTF_8));
+				line.addLast(new StringEncoder(CharsetUtil.UTF_8));
+				line.addLast(new ServerHandler());
 			}
 		});
 
