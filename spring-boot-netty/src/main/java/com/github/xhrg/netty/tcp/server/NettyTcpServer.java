@@ -4,7 +4,6 @@ import com.github.xhrg.netty.util.NettyUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -30,8 +29,6 @@ public class NettyTcpServer {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		System.out.println(NettyRuntime.availableProcessors());
-
 		ServerBootstrap bootstrap = new ServerBootstrap();
 
 		EventLoopGroup boss = isUseEpoll ? new EpollEventLoopGroup(1) : new NioEventLoopGroup(1);
@@ -51,9 +48,7 @@ public class NettyTcpServer {
 				line.addLast(new NettyTcpServerHandler());
 			}
 		});
-		// 这句话注释掉，先不删除，待定其用法
-		// bootstrap.bind(8080).sync().channel().closeFuture().addListener(ChannelFutureListener.CLOSE);
-		
+
 		ChannelFuture c = bootstrap.bind(port).sync();
 		String ip = c.channel().localAddress().toString();
 		System.out.println(ip);
