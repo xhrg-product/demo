@@ -31,3 +31,10 @@ spring-boot-web项目，包含以下内容
 * 简单的http接口
 * 简单的sse接口
 * 简单的websocket接口
+
+#### 2024.08.15.spring-boot-netty
+
+按照重要程度有如下内容
+* 基于tcp的一个服务端和客户端，包含了client-server模式的各种重要要素，比如心跳，空闲检测，水位线等。
+* 基于netty的网关转发
+* 基于http协议的一个客户端和服务端。
