@@ -15,18 +15,18 @@ public class ClientHandler extends NoteSimpleChannelInboundHandler<String> {
 	}
 
 	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		super.channelActive(ctx);
+	}
+
+	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		System.out.println("client: "+ctx.channel().isActive());
-		System.out.println("client: "+ctx.channel().isOpen());
-		System.out.println("client: "+ctx.channel().isRegistered());
-		System.out.println("client: "+ctx.channel().isWritable());
-		System.out.println("client: "+ctx);
-//		ctx.channel().close();
+		super.channelInactive(ctx);
 	}
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-		System.out.println("客户端收到响应：" + msg);
+		System.out.println("客户端1收到响应：" + msg);
 	}
 
 	@Override
@@ -43,5 +43,4 @@ public class ClientHandler extends NoteSimpleChannelInboundHandler<String> {
 	protected void log(String msg) throws Exception {
 
 	}
-
 }

@@ -36,7 +36,7 @@ public class NettyTcpClient {
 			@Override
 			protected void initChannel(NioSocketChannel ch) throws Exception {
 				ChannelPipeline line = ch.pipeline();
-				line.addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS));
+				line.addLast(new IdleStateHandler(0, 0, 60, TimeUnit.MINUTES));
 				line.addLast(new StringDecoder(CharsetUtil.UTF_8));
 				line.addLast(new StringEncoder(CharsetUtil.UTF_8));
 				line.addLast(new ClientHandler());
@@ -45,11 +45,11 @@ public class NettyTcpClient {
 		try {
 			Channel c = bootstrap.connect("127.0.0.1", NettyTcpServer.port).sync().channel();
 			while (1 == 1) {
-				SystemUtils.sleep(1000 * 20);
 				c.writeAndFlush("abcd").addListener(future -> {
 					System.out.println(future.isSuccess());
 					System.out.println(future.cause());
 				});
+				SystemUtils.sleep(1000 * 20);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

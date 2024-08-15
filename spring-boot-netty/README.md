@@ -7,6 +7,8 @@
 刚才的操作执行后的动作。
 * ChannelFutureListener.CLOSE的正确场景应该是，channel.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 * ChannelFutureListener.CLOSE
+* ChannelInboundHandlerAdapter.java 内部有很多channelXXX方法，SimpleChannelInboundHandler继承此类，那么在我们自定义的handler要不要调用super.channelXXX呢
+这里的逻辑是这样的。如果你调用了super.channelXXX()方法，就会让该handler后面的handler的该方法优先触发。这是一个责任链模式。
  
 
 #### 未解决问题

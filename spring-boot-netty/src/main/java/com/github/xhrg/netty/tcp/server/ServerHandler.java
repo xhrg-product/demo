@@ -14,23 +14,7 @@ public class ServerHandler extends NoteSimpleChannelInboundHandler<String> {
 	}
 
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		System.out.println("server: " + ctx);
-		System.out.println("server: " + ctx.channel().isActive());
-		System.out.println("server: " + ctx.channel().isOpen());
-		System.out.println("server: " + ctx.channel().isRegistered());
-		System.out.println("server: " + ctx.channel().isWritable());
-//		
-//		server: false
-//		server: false
-//		server: true
-//		server: false
-		
-//		client: false
-//		client: false
-//		client: true
-//		client: false
-		
-		ctx.channel().close();
+		super.channelInactive(ctx);
 	}
 
 	@Override
