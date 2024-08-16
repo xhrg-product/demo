@@ -21,6 +21,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.NettyRuntime;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 
 public class NettyTcpServer {
 
@@ -36,6 +38,7 @@ public class NettyTcpServer {
 
 		EventLoopGroup boss = isUseEpoll ? new EpollEventLoopGroup(1) : new NioEventLoopGroup(1);
 		EventLoopGroup selector = isUseEpoll ? new EpollEventLoopGroup(cSize) : new NioEventLoopGroup(cSize);
+		EventExecutorGroup worker = new DefaultEventExecutorGroup(cSize);
 
 		bootstrap.group(boss, selector)
 				.channel(isUseEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
@@ -46,10 +49,10 @@ public class NettyTcpServer {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline line = ch.pipeline();
-				line.addLast(new IdleStateHandler(0, 0, 60, TimeUnit.MINUTES));
-				line.addLast(new StringDecoder(CharsetUtil.UTF_8));
-				line.addLast(new StringEncoder(CharsetUtil.UTF_8));
-				line.addLast(new ServerHandler());
+				line.addLast(worker, new IdleStateHandler(0, 0, 60, TimeUnit.MINUTES));
+				line.addLast(worker, new StringDecoder(CharsetUtil.UTF_8));
+				line.addLast(worker, new StringEncoder(CharsetUtil.UTF_8));
+				line.addLast(worker, new ServerHandler());
 			}
 		});
 
