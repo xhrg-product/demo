@@ -1,4 +1,4 @@
-package com.github.xhrg.demo.rocksdb;
+package com.github.xhrg.demo;
 
 import javax.servlet.http.HttpServletRequest;
 
