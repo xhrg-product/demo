@@ -1,4 +1,4 @@
-package com.github.xhrg.demo.rocksdb;
+package com.example.demo;
 
 import java.nio.charset.StandardCharsets;
 
@@ -11,7 +11,6 @@ import org.rocksdb.WriteOptions;
 
 /**
  *  WriteBatch
- *  
  *  
  */
 public class RocksDBMessageQueue {

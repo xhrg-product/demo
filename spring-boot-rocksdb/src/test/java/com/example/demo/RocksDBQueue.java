@@ -1,4 +1,4 @@
-package com.github.xhrg.demo.rocksdb;
+package com.example.demo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,6 @@ public class RocksDBQueue {
 	}
 
 	public void put(String topic, int index, byte[] data) throws RocksDBException {
-
 		ColumnFamilyHandle topicHandle = topicHandles.get(topic);
 		if (topicHandle == null) {
 

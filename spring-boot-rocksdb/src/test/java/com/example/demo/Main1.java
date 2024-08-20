@@ -1,8 +1,9 @@
-package com.github.xhrg.demo.rocksdb;
+package com.example.demo;
 
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
 
 public class Main1 {
 
@@ -14,13 +15,13 @@ public class Main1 {
 		Options options = new Options();
 		options.setCreateIfMissing(true);
 
-		RocksDB rocksDB = RocksDB.open(options, dbPath);
+		RocksDB db = RocksDB.open(options, dbPath);
 
-		byte[] key = "Hello".getBytes();
-		rocksDB.put(key, "World".getBytes());
+		RocksIterator iterator = db.newIterator();
 
-		byte[] val = rocksDB.get(key);
-		System.out.println(new String(val));
+		for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
+			System.out.println(new String(iterator.key()) + " : " + new String(iterator.value()));
+		}
 
 	}
 }
