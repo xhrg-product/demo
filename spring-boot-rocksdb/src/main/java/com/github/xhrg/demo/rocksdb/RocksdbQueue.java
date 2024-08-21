@@ -26,29 +26,24 @@ public class RocksdbQueue {
 
 	private DBOptions options;
 
-	public static void main(String[] args) throws RocksDBException {
-		RocksdbQueue q = new RocksdbQueue("d:/temp/v4");
-		q.put("a", "ccd");
-		q.put("d", "ccd");
-	}
-
 	public long put(String column, String data) throws RocksDBException {
 		TopicHandler topicHandler = topicHandlerMap.get(column);
 		if (topicHandler == null) {
 			topicHandler = create(column);
+			topicHandlerMap.put(column, topicHandler);
 		}
-		long id = topicHandler.getId().getAndIncrement();
-		db.put(topicHandler.getTopicHandle(), (id + "").getBytes(), "a".getBytes());
+		long id = topicHandler.getId().incrementAndGet();
+		db.put(topicHandler.getTopicHandle(), Utils.id2bytes(id), Utils.str2bytes(data));
 		return id;
 	}
 
-	public long get(String column, long id) throws RocksDBException {
+	public String get(String column, long id) throws RocksDBException {
 		TopicHandler topicHandler = topicHandlerMap.get(column);
 		if (topicHandler == null) {
 			throw new RuntimeException("not colum " + column);
 		}
-		db.get(topicHandler.getTopicHandle(), (id + "").getBytes());
-		return id;
+		byte[] bs = db.get(topicHandler.getTopicHandle(), (id + "").getBytes());
+		return new String(bs, StandardCharsets.UTF_8);
 	}
 
 	public RocksdbQueue(String path) throws RocksDBException {
