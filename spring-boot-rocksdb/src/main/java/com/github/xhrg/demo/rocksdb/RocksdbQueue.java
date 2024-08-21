@@ -50,6 +50,7 @@ public class RocksdbQueue {
 		topicHandlerMap = new ConcurrentHashMap<>();
 		List<byte[]> columnFamilies = RocksDB.listColumnFamilies(new Options(), path);
 		List<ColumnFamilyDescriptor> cfDescriptors = new ArrayList<>();
+		cfDescriptors.add(new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, new ColumnFamilyOptions()));
 		for (byte[] cf : columnFamilies) {
 			cfDescriptors.add(new ColumnFamilyDescriptor(cf));
 		}
@@ -83,7 +84,7 @@ public class RocksdbQueue {
 		try {
 			ColumnFamilyHandle cfh = db.createColumnFamily(new ColumnFamilyDescriptor(column.getBytes(), option));
 			TopicHandler t = new TopicHandler();
-			t.setId(new AtomicLong(1));
+			t.setId(new AtomicLong(0));
 			t.setOption(option);
 			t.setTopicHandle(cfh);
 			return t;
