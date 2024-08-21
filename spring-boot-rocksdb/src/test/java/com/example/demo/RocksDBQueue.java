@@ -30,7 +30,6 @@ public class RocksDBQueue {
 	public void put(String topic, int index, byte[] data) throws RocksDBException {
 		ColumnFamilyHandle topicHandle = topicHandles.get(topic);
 		if (topicHandle == null) {
-
 			ColumnFamilyOptions option = new ColumnFamilyOptions();
 			option.setTtl((TimeUnit.DAYS.toMillis(3)));
 			topicHandle = db.createColumnFamily(new ColumnFamilyDescriptor(topic.getBytes(), option));
