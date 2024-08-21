@@ -18,7 +18,7 @@ import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.RocksIterator;
 
-public class MyQueue {
+public class RocksdbQueue {
 
 	private RocksDB db;
 
@@ -27,13 +27,32 @@ public class MyQueue {
 	private DBOptions options;
 
 	public static void main(String[] args) throws RocksDBException {
-		MyQueue q = new MyQueue("d:/temp/v4");
-		q.write("a", "ccd");
+		RocksdbQueue q = new RocksdbQueue("d:/temp/v4");
+		q.put("a", "ccd");
+		q.put("d", "ccd");
 	}
 
-	public MyQueue(String path) throws RocksDBException {
-		topicHandlerMap = new ConcurrentHashMap<>();
+	public long put(String column, String data) throws RocksDBException {
+		TopicHandler topicHandler = topicHandlerMap.get(column);
+		if (topicHandler == null) {
+			topicHandler = create(column);
+		}
+		long id = topicHandler.getId().getAndIncrement();
+		db.put(topicHandler.getTopicHandle(), (id + "").getBytes(), "a".getBytes());
+		return id;
+	}
 
+	public long get(String column, long id) throws RocksDBException {
+		TopicHandler topicHandler = topicHandlerMap.get(column);
+		if (topicHandler == null) {
+			throw new RuntimeException("not colum " + column);
+		}
+		db.get(topicHandler.getTopicHandle(), (id + "").getBytes());
+		return id;
+	}
+
+	public RocksdbQueue(String path) throws RocksDBException {
+		topicHandlerMap = new ConcurrentHashMap<>();
 		List<byte[]> columnFamilies = RocksDB.listColumnFamilies(new Options(), path);
 		List<ColumnFamilyDescriptor> cfDescriptors = new ArrayList<>();
 		for (byte[] cf : columnFamilies) {
@@ -57,33 +76,19 @@ public class MyQueue {
 			}
 			TopicHandler t = new TopicHandler();
 			t.setId(new AtomicLong(Long.parseLong(s)));
-//			t.setOption(option);
 			t.setTopicHandle(h);
 			topicHandlerMap.put(new String(h.getName()), t);
 		}
-
 	}
 
-	public long write(String topic, String data) throws RocksDBException {
-		TopicHandler topicHandler = topicHandlerMap.get(topic);
-		long id = topicHandler.getId().incrementAndGet();
-		db.put(topicHandler.getTopicHandle(), (id + "").getBytes(), "a".getBytes());
-		return id;
-	}
-
-	private TopicHandler init(String topic) {
+	private TopicHandler create(String column) {
+		// 待关闭
 		ColumnFamilyOptions option = new ColumnFamilyOptions();
 		option.setTtl((TimeUnit.DAYS.toMillis(3)));
 		try {
-			ColumnFamilyHandle cfh = db.createColumnFamily(new ColumnFamilyDescriptor(topic.getBytes(), option));
-			RocksIterator it = db.newIterator(cfh);
-			it.seekToLast();
-			String s = new String(it.key(), StandardCharsets.UTF_8);
-			if (s == null || s.isEmpty()) {
-				s = "0";
-			}
+			ColumnFamilyHandle cfh = db.createColumnFamily(new ColumnFamilyDescriptor(column.getBytes(), option));
 			TopicHandler t = new TopicHandler();
-			t.setId(new AtomicLong(Long.parseLong(s)));
+			t.setId(new AtomicLong(1));
 			t.setOption(option);
 			t.setTopicHandle(cfh);
 			return t;
