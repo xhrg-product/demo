@@ -2,6 +2,8 @@ package com.github.xhrg.netty.tcp.server;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLEngine;
+
 import com.github.xhrg.netty.util.NettyUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -18,6 +20,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.SslProvider;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.NettyRuntime;
@@ -32,6 +40,8 @@ public class NettyTcpServer {
 
 	public static int port = 40814;
 
+	private static boolean enableTls = false;
+
 	public static void main(String[] args) throws InterruptedException {
 
 		ServerBootstrap bootstrap = new ServerBootstrap();
@@ -45,17 +55,23 @@ public class NettyTcpServer {
 
 		initOption(bootstrap);
 
+		SslContext tls = tls();
+
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline line = ch.pipeline();
+				if (tls != null) {
+					SSLEngine engine = tls.newEngine(ch.alloc());
+					engine.setUseClientMode(false);
+					ch.pipeline().addFirst("ssl", new SslHandler(engine));
+				}
 				line.addLast(worker, new IdleStateHandler(0, 0, 60, TimeUnit.MINUTES));
 				line.addLast(worker, new StringDecoder(CharsetUtil.UTF_8));
 				line.addLast(worker, new StringEncoder(CharsetUtil.UTF_8));
 				line.addLast(worker, new ServerHandler());
 			}
 		});
-
 		ChannelFuture c = bootstrap.bind(port).sync();
 		String ip = c.channel().localAddress().toString();
 		System.out.println(ip);
@@ -80,4 +96,17 @@ public class NettyTcpServer {
 		bootstrap.childOption(ChannelOption.SO_SNDBUF, 65535);
 	}
 
+	public static SslContext tls() {
+		try {
+			if (!enableTls) {
+				return null;
+			}
+			SelfSignedCertificate selfSignedCertificate = new SelfSignedCertificate();
+			return SslContextBuilder.forServer(selfSignedCertificate.certificate(), selfSignedCertificate.privateKey())
+					.sslProvider(SslProvider.JDK).clientAuth(ClientAuth.OPTIONAL).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
