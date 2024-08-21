@@ -10,7 +10,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -27,9 +26,7 @@ public class NettyTcpClient {
 	public static void main(String[] args) {
 		Bootstrap bootstrap = new Bootstrap();
 
-		EventLoopGroup group = isUseEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-
-		bootstrap.group(group);
+		bootstrap.group(isUseEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup());
 		bootstrap.channel(isUseEpoll ? EpollSocketChannel.class : NioSocketChannel.class);
 
 		bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
