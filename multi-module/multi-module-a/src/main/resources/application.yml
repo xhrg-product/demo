@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: "bee-demo"
+server:
+  port: 20000
+  servlet:
+    context-path: "/bee-demo"
+
+dubbo:
+  application:
+    name: "bee-demo"
+  registry:
+    address: zookeeper://127.0.0.1:2181
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:1111/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
