@@ -7,19 +7,22 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
 public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
 
-		ByteBuf byteBuf = ctx.alloc().buffer().writeBytes("你好".getBytes(StandardCharsets.UTF_8));
-		DefaultFullHttpResponse defaultFullHttpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-				HttpResponseStatus.OK, byteBuf);
+        byte[] text = "你好".getBytes(StandardCharsets.UTF_8);
 
-		defaultFullHttpResponse.content();
-
-	}
+        ByteBuf byteBuf = ctx.alloc().buffer().writeBytes(text);
+        DefaultFullHttpResponse resonse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
+                byteBuf);
+        resonse.headers().add(HttpHeaderNames.CONTENT_LENGTH, text.length);
+        resonse.headers().add(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=UTF-8");
+        ctx.writeAndFlush(resonse);
+    }
 }
