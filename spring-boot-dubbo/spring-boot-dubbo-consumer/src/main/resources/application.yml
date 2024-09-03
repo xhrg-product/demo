@@ -1,0 +1,15 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: consumer-service
+    
+dubbo:
+  application:
+    name: consumer-service
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  protocol:
+    name: dubbo
+  consumer:
+    check: true

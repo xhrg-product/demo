@@ -1,0 +1,18 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: producer-service
+    
+    
+dubbo:
+  application:
+    name: producer-service
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  protocol:
+    name: dubbo
+    port: 20880
+  scan:
+    # 重要配置，等待分析
+    base-packages: com.github.xhrg
