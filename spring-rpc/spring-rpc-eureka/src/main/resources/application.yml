@@ -1,0 +1,16 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: eureka-service
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    #指定是否要从注册中心获取服务（注册中心不需要开启）
+    fetch-registry: false
+    #指定是否要注册到注册中心（注册中心不需要开启）
+    register-with-eureka: false
+  server:
+    #关闭保护模式
+    enable-self-preservation: false
