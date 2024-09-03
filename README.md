@@ -46,3 +46,11 @@ dubbo项目
 #### 2024.08.15.spring-boot-temp
 
 临时目录，存一些依赖，方便阅读源码
+
+#### 2024.09.03.spring-rpc
+
+基于spring cloud rpc，使用eureka作为注册中心的rpc调用，不过本demo中，eureka仅仅是为rpc使用，没有完善配置，不足以生产使用。
+
+#### 2024.09.03.spring-boot-dubbo
+
+dubbo项目
