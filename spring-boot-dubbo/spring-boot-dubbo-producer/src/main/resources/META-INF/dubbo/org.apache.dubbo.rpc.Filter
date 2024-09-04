@@ -1,0 +1,1 @@
+demoExceptionFilter=com.github.xhrg.springrpc.producer.filter.DemoExceptionFilter
