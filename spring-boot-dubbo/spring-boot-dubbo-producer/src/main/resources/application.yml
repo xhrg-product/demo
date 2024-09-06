@@ -2,12 +2,12 @@ server:
   port: 8001
 spring:
   application:
-    name: producer-service
+    name: dubbo-provider-service
     
     
 dubbo:
   application:
-    name: producer-service
+    name: dubbo-provider-service
   registry:
     address: zookeeper://q-host:2181
   protocol:
