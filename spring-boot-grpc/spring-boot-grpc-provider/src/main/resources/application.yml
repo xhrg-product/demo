@@ -1,0 +1,11 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: dubbo-provider-service
+    
+    
+#grpc相关配置
+grpc:
+  server:
+    port: 9090
