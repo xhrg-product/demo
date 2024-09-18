@@ -22,10 +22,10 @@
 			<version>1.14.4</version>
 		</dependency>
 		<dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.11.0.GA</version>
-        </dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.11.0.GA</version>
+		</dependency>
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy-agent</artifactId>
@@ -36,18 +36,65 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>utf-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>net.bytebuddy</pattern>
+									<shadedPattern>com.abcd.net.bytebuddy</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>javassis</pattern>
+									<shadedPattern>com.abcd.javassis</shadedPattern>
+								</relocation>
+							</relocations>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<!--修改为你自己的类名全路径-->
+										<Premain-Class>
+											com.github.xhrg.java.agent.jar.PreMainAgent</Premain-Class>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- 这个插件也可以用，需要区分此插件和maven-shade-plugin的区别
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptorRefs>
-						<!--打包时加入依赖-->
+						打包时加入依赖
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
-						<!--自动生成/META-INF/MANIFEST.MF-->
+						自动生成/META-INF/MANIFEST.MF
 						<manifestEntries>
-							<Premain-Class>com.github.xhrg.java.agent.jar.PreMainAgent</Premain-Class>
-							<Agent-Class>com.github.xhrg.java.agent.jar.PreMainAgent</Agent-Class>
+							<Premain-Class>
+								com.github.xhrg.java.agent.jar.PreMainAgent</Premain-Class>
+							<Agent-Class>
+								com.github.xhrg.java.agent.jar.PreMainAgent</Agent-Class>
 							<Can-Redefine-Classes>true</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 						</manifestEntries>
@@ -63,6 +110,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>
